@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% block title %}Events · Sports League{% endblock %}
+{% block content %}
+
+<div class="page-head">
+  <div>
+    <div class="h1">Events</div>
+    <div style="color:var(--muted);margin-top:6px">
+      Tournaments and seasons in your league
+    </div>
+  </div>
+  <div>
+    <a class="btn btn-primary" href="{{ url_for('add_event') }}">+ New Event</a>
+  </div>
+</div>
+
+<div class="card">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Sport</th>
+        <th>Season</th>
+        <th>Dates</th>
+        <th style="text-align:right;">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for e in events %}
+      <tr class="table-row">
+        <td>{{ e.name }}</td>
+        <td>{{ e.sport_type or '-' }}</td>
+        <td>{{ e.season or '-' }}</td>
+        <td>
+          {{ e.start_date or '-' }} — {{ e.end_date or '-' }}
+        </td>
+        <td style="text-align:right; white-space:nowrap;">
+
+          <!-- NEW: View button goes to event detail page -->
+          <a class="btn ghost" href="{{ url_for('event_detail', event_id=e.id) }}">
+            View
+          </a>
+
+          <a class="btn" href="{{ url_for('edit_event', event_id=e.id) }}">Edit</a>
+
+          <form method="post"
+                action="{{ url_for('delete_event', event_id=e.id) }}"
+                style="display:inline;"
+                data-confirm="Delete event &quot;{{ e.name }}&quot;? All its fixtures may be removed."
+                onsubmit="return confirm(this.dataset.confirm);">
+            <button type="submit" class="btn ghost">Delete</button>
+          </form>
+
+        </td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="5" style="text-align:center;color:var(--muted)">
+          No events yet. Click <strong>+ New Event</strong> to create one.
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}

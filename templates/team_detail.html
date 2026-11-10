@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}{{ team.name }} · Team{% endblock %}
+{% block content %}
+
+<div class="page-head">
+  <div>
+    <div class="h1">{{ team.name }}</div>
+    <div style="color:var(--muted);margin-top:6px">
+      {{ team.city or 'No city' }} · Coach: {{ team.coach or 'N/A' }}
+    </div>
+  </div>
+  <div>
+    <a class="btn" href="{{ url_for('edit_team', team_id=team.id) }}">Edit Team</a>
+    <a class="btn btn-ghost" href="{{ url_for('teams_view') }}">Back</a>
+  </div>
+</div>
+
+<div class="card">
+  <h3>Players</h3>
+  {% if team.players.count() %}
+    <ul>
+      {% for p in team.players %}
+        <li>
+          {{ p.first_name }} {{ p.last_name or '' }} – {{ p.position or 'No position' }}
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p style="color:var(--muted);">No players assigned to this team yet.</p>
+  {% endif %}
+</div>
+
+{% endblock %}

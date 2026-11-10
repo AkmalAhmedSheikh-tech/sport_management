@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}Players · Sports League{% endblock %}
+{% block content %}
+
+<div class="page-head">
+  <div>
+    <div class="h1">Players</div>
+    <div style="color:var(--muted);margin-top:6px">
+      All registered players
+    </div>
+  </div>
+  <div>
+    <a class="btn btn-primary" href="{{ url_for('add_player') }}">+ New Player</a>
+  </div>
+</div>
+
+<div class="card">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Position</th>
+        <th style="text-align:right;">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for p in players %}
+      <tr class="table-row">
+        <td>
+          {{ p.first_name }}
+          {% if p.last_name %}
+            {{ p.last_name }}
+          {% endif %}
+        </td>
+        <td>{{ p.position or "-" }}</td>
+        <td style="text-align:right; white-space:nowrap;">
+          <form method="post"
+                action="{{ url_for('delete_player', player_id=p.id) }}"
+                style="display:inline;"
+                data-confirm="Delete player {{ p.first_name }}{% if p.last_name %} {{ p.last_name }}{% endif %}? This cannot be undone."
+                onsubmit="return confirm(this.dataset.confirm);">
+            <button type="submit" class="btn ghost">Delete</button>
+          </form>
+        </td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="3" style="text-align:center;color:var(--muted)">
+          No players yet. Click <strong>+ New Player</strong> to create one.
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}

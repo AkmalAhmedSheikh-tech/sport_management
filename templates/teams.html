@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %}Teams · Sports League{% endblock %}
+{% block content %}
+
+<div class="page-head">
+  <div>
+    <div class="h1">Teams</div>
+    <div style="color:var(--muted);margin-top:6px">
+      Manage all registered teams in the league
+    </div>
+  </div>
+  <div>
+    <!-- THIS is the Add Team button -->
+    <a class="btn btn-primary" href="{{ url_for('add_team') }}">+ Add Team</a>
+  </div>
+</div>
+
+<div class="card">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Short</th>
+        <th>City</th>
+        <th>Coach</th>
+        <th style="text-align:right">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for t in teams %}
+      <tr class="table-row">
+        <td>{{ t.name }}</td>
+        <td>{{ t.short_name or '-' }}</td>
+        <td>{{ t.city or '-' }}</td>
+        <td>{{ t.coach or '-' }}</td>
+        <td style="text-align:right; white-space:nowrap;">
+  <a class="btn" href="{{ url_for('team_detail', team_id=t.id) }}">View</a>
+  <a class="btn" href="{{ url_for('edit_team', team_id=t.id) }}">Edit</a>
+  <form method="post"
+        action="{{ url_for('delete_team', team_id=t.id) }}"
+        data-team-name="{{ t.name }}"
+        onsubmit="return confirmDeleteTeam(this, this.dataset.teamName);"
+        style="display:inline;">
+    <button type="submit" class="btn ghost">Delete</button>
+  </form>
+</td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="5" style="text-align:center;color:var(--muted)">
+          No teams yet. Click <strong>+ Add Team</strong> to create one.
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}

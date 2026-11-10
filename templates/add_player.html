@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="page-head">
+  <div><div class="h1">Add Player</div></div>
+  <div><a class="btn btn-ghost" href="/players">Cancel</a></div>
+</div>
+
+<div class="card">
+  <form method="POST" class="form">
+    <div class="form-row">
+      <div class="form-field" style="flex:1">
+        <label>First Name</label><input name="first_name" type="text" required />
+      </div>
+      <div class="form-field" style="flex:1">
+        <label>Last Name</label><input name="last_name" type="text" />
+      </div>
+    </div>
+
+    <div class="form-field">
+      <label>Position</label><input name="position" type="text" />
+    </div>
+
+    <div style="margin-top:12px">
+      <button class="btn btn-primary" type="submit">Add Player</button>
+    </div>
+  </form>
+</div>
+{% endblock %}

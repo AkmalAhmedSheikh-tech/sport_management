@@ -1,0 +1,156 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="page-head">
+  <div>
+    <div class="h1">Dashboard</div>
+    <div style="color:var(--muted);margin-top:6px">
+      Overview of teams, players, events and upcoming fixtures
+    </div>
+  </div>
+
+  <div style="display:flex;gap:12px">
+    <a href="{{ url_for('add_team') }}" class="btn btn-ghost">+ Team</a>
+    <a href="{{ url_for('add_player') }}" class="btn btn-primary">+ Player</a>
+  </div>
+</div>
+
+<div class="grid" style="margin-bottom:20px">
+  
+  <!-- LEFT COLUMN (Teams, then Players) -->
+  <div class="col-4">
+
+    <!-- TEAMS CARD -->
+    <div class="card" style="margin-bottom:20px">
+      <div style="font-weight:700">Teams</div>
+
+      <div style="margin-top:12px">
+        {% for t in teams %}
+          <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(12,14,20,0.05)">
+            <div>{{ t.name }}</div>
+            <div style="color:var(--muted)">{{ t.city or '-' }}</div>
+          </div>
+        {% else %}
+          <div style="color:var(--muted)">No teams yet</div>
+        {% endfor %}
+      </div>
+
+      <div style="margin-top:12px">
+        <a href="{{ url_for('teams_view') }}" class="link">Manage teams →</a>
+      </div>
+    </div>
+
+
+    <!-- PLAYERS CARD (below teams) -->
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div style="font-weight:700">Players</div>
+        <a href="{{ url_for('players_view') }}" class="link">View all</a>
+      </div>
+
+      <div style="margin-top:12px">
+        <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px">
+          {% for p in players %}
+            <div style="padding:10px;border-radius:10px;background:#fff;box-shadow:var(--shadow-subtle)">
+              <div style="font-weight:700">{{ p.first_name }} {{ p.last_name }}</div>
+              <div style="color:var(--muted);font-size:13px;margin-top:4px">
+                {{ p.position or '-' }}
+              </div>
+            </div>
+          {% else %}
+            <div style="color:var(--muted)">No players yet</div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+
+  <!-- RIGHT COLUMN (Fixtures, Events) -->
+  <div class="col-8">
+
+    <!-- UPCOMING FIXTURES -->
+    <div class="card" style="margin-bottom:20px">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div style="font-weight:700">Upcoming Fixtures</div>
+        <a href="{{ url_for('fixtures_view') }}" class="link">View all</a>
+      </div>
+
+      <div style="margin-top:12px">
+        {% if upcoming_fixtures %}
+          {% for f in upcoming_fixtures %}
+            <div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid rgba(12,14,20,0.05)">
+              <div>
+                <div>
+                  {{ f.home_team.name if f.home_team else '-' }}
+                  vs
+                  {{ f.away_team.name if f.away_team else '-' }}
+                </div>
+                <div style="color:var(--muted);font-size:13px;margin-top:4px">
+                  {% if f.event %}{{ f.event.name }} · {% endif %}
+                  {% if f.scheduled_at %}
+                    {{ f.scheduled_at.strftime('%Y-%m-%d %H:%M') }}
+                  {% else %}
+                    Time not set
+                  {% endif %}
+                </div>
+              </div>
+
+              <div style="color:var(--muted);font-size:13px;text-transform:capitalize;">
+                {{ f.status or 'scheduled' }}
+              </div>
+            </div>
+          {% endfor %}
+        {% else %}
+          <div style="color:var(--muted)">
+            No upcoming fixtures.
+            <a href="{{ url_for('add_fixture') }}" class="link">Schedule one →</a>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+
+
+    <!-- EVENTS -->
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div style="font-weight:700">Events</div>
+        <a href="{{ url_for('events_view') }}" class="link">View all</a>
+      </div>
+
+      <div style="margin-top:12px">
+        {% if events %}
+          {% for e in events %}
+            <div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid rgba(12,14,20,0.05)">
+              <div>
+                <div>{{ e.name }}</div>
+                <div style="color:var(--muted);font-size:13px;margin-top:3px">
+                  {{ e.sport_type or '-' }}
+                  {% if e.season %} · {{ e.season }}{% endif %}
+                </div>
+              </div>
+
+              <div style="color:var(--muted);font-size:13px;text-align:right;">
+                {% if e.start_date or e.end_date %}
+                  {{ e.start_date or '-' }} – {{ e.end_date or '-' }}
+                {% else %}
+                  Dates not set
+                {% endif %}
+              </div>
+            </div>
+          {% endfor %}
+        {% else %}
+          <div style="color:var(--muted)">
+            No events yet.
+            <a href="{{ url_for('add_event') }}" class="link">Create one →</a>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+{% endblock %}

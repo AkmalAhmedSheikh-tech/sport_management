@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="page-head">
+  <div><div class="h1">Create Event</div></div>
+  <div><a class="btn btn-ghost" href="/events">Cancel</a></div>
+</div>
+
+<div class="card">
+  <form method="POST" class="form">
+    <div class="form-field"><label>Event Name</label><input name="name" required /></div>
+    <div class="form-field"><label>Description</label><textarea name="description" rows="4"></textarea></div>
+
+    <div class="form-row">
+      <div class="form-field"><label>Sport Type</label><input name="sport_type" value="football" /></div>
+      <div class="form-field"><label>Season</label><input name="season" /></div>
+      <div class="form-field"><label>Start</label><input type="date" name="start_date" /></div>
+      <div class="form-field"><label>End</label><input type="date" name="end_date" /></div>
+    </div>
+
+    <div style="margin-top:12px">
+      <button class="btn btn-primary" type="submit">Create Event</button>
+    </div>
+  </form>
+</div>
+{% endblock %}

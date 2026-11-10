@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block title %}Schedule Fixture · Sports League{% endblock %}
+{% block content %}
+
+<div class="page-head">
+  <div>
+    <div class="h1">Schedule New Fixture</div>
+    <div style="color:var(--muted);margin-top:6px">
+      Create a new match between two teams, optionally linked to an event.
+    </div>
+  </div>
+  <div>
+    <a class="btn" href="{{ url_for('fixtures_view') }}">← Back to Fixtures</a>
+  </div>
+</div>
+
+<div class="card">
+  <form method="post" action="{{ url_for('add_fixture') }}" style="padding:16px;">
+
+    <!-- Event -->
+    <div class="form-group" style="margin-bottom:12px;">
+      <label for="event_id">Event (optional)</label>
+      <select name="event_id" id="event_id" class="form-control">
+        <option value="">— No Event —</option>
+        {% for e in events %}
+          <option value="{{ e.id }}"
+            {% if selected_event_id and e.id == selected_event_id %}selected{% endif %}>
+            {{ e.name }}
+          </option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <!-- Home team -->
+    <div class="form-group" style="margin-bottom:12px;">
+      <label for="home_team_id">Home Team</label>
+      <select name="home_team_id" id="home_team_id" class="form-control" required>
+        <option value="">Select home team</option>
+        {% for t in teams %}
+          <option value="{{ t.id }}">{{ t.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <!-- Away team -->
+    <div class="form-group" style="margin-bottom:12px;">
+      <label for="away_team_id">Away Team</label>
+      <select name="away_team_id" id="away_team_id" class="form-control" required>
+        <option value="">Select away team</option>
+        {% for t in teams %}
+          <option value="{{ t.id }}">{{ t.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <!-- Date/time -->
+    <div class="form-group" style="margin-bottom:12px;">
+      <label for="scheduled_at">Scheduled Date &amp; Time</label>
+      <input type="datetime-local" name="scheduled_at" id="scheduled_at"
+             class="form-control">
+    </div>
+
+    <button type="submit" class="btn btn-primary">
+      Save Fixture
+    </button>
+  </form>
+</div>
+
+{% endblock %}

@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block title %}Fixtures · Sports League{% endblock %}
+{% block content %}
+
+<div class="page-head">
+  <div>
+    <div class="h1">Fixtures</div>
+    <div style="color:var(--muted);margin-top:6px">
+      All scheduled matches in the league
+    </div>
+  </div>
+  <div>
+    <a class="btn btn-primary" href="{{ url_for('add_fixture') }}">+ Schedule New Fixture</a>
+  </div>
+</div>
+
+<div class="card">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Home Team</th>
+        <th>Away Team</th>
+        <th>Event</th>
+        <th>Scheduled Date</th>
+        <th>Status</th>
+        <th style="text-align:right;">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for f in fixtures %}
+      <tr class="table-row">
+        <td>{{ f.home_team.name if f.home_team else '-' }}</td>
+        <td>{{ f.away_team.name if f.away_team else '-' }}</td>
+        <td>{{ f.event.name if f.event else '-' }}</td>
+        <td>
+          {% if f.scheduled_at %}
+            {{ f.scheduled_at.strftime('%Y-%m-%d %H:%M') }}
+          {% else %}
+            -
+          {% endif %}
+        </td>
+        <td>{{ f.status or '-' }}</td>
+        <td style="text-align:right; white-space:nowrap;">
+          <form method="post"
+                action="{{ url_for('delete_fixture', fixture_id=f.id) }}"
+                style="display:inline;">
+            <button type="submit">Delete</button>
+          </form>
+        </td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="6" style="text-align:center;color:var(--muted)">
+          No fixtures yet. Click <strong>+ Schedule New Fixture</strong> to add one.
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}

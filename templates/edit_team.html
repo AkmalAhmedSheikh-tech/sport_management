@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block title %}Edit Team · Sports League{% endblock %}
+{% block content %}
+
+<div class="page-head">
+  <div>
+    <div class="h1">Edit Team</div>
+    <div style="color:var(--muted);margin-top:6px">
+      Update team details and assigned players
+    </div>
+  </div>
+  <div>
+    <a class="btn btn-ghost" href="{{ url_for('teams_view') }}">Back to Teams</a>
+  </div>
+</div>
+
+<div class="card">
+  <form method="POST" class="form">
+    <div class="form-row">
+      <div class="form-field" style="flex:1">
+        <label>Name</label>
+        <input type="text" name="name" value="{{ team.name }}" required />
+      </div>
+      <div class="form-field" style="width:160px">
+        <label>Short</label>
+        <input type="text" name="short_name" value="{{ team.short_name or '' }}" />
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-field">
+        <label>City</label>
+        <input type="text" name="city" value="{{ team.city or '' }}" />
+      </div>
+      <div class="form-field">
+        <label>Coach</label>
+        <input type="text" name="coach" value="{{ team.coach or '' }}" />
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-field" style="flex:1">
+        <label>Assigned Players</label>
+        <select name="player_ids" multiple size="8" style="width:100%; min-height:160px;">
+          {% for p in players %}
+            <option value="{{ p.id }}"
+              {% if p.id in current_player_ids %}selected{% endif %}>
+              {{ p.first_name }} {{ p.last_name or '' }} ({{ p.position or 'No position' }})
+            </option>
+          {% endfor %}
+        </select>
+        <small style="color:var(--muted);">
+          Hold Ctrl (Windows) or Cmd (Mac) to select multiple players.
+        </small>
+      </div>
+    </div>
+
+    <div style="margin-top:12px">
+      <button class="btn btn-primary" type="submit">Save Changes</button>
+    </div>
+  </form>
+</div>
+
+{% endblock %}

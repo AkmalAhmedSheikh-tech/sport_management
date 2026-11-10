@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% block title %}{{ event.name }} · Sports League{% endblock %}
+{% block content %}
+
+<div class="page-head">
+  <div>
+    <div class="h1">{{ event.name }}</div>
+    <div style="color:var(--muted);margin-top:6px">
+      {{ event.sport_type or 'Sport not set' }} · {{ event.season or 'Season not set' }}
+    </div>
+    {% if event.start_date or event.end_date %}
+      <div style="color:var(--muted);margin-top:4px">
+        {{ event.start_date or '-' }} — {{ event.end_date or '-' }}
+      </div>
+    {% endif %}
+  </div>
+  <div>
+    <a class="btn" href="{{ url_for('events_view') }}">← Back to Events</a>
+    <a class="btn" href="{{ url_for('edit_event', event_id=event.id) }}">Edit Event</a>
+  </div>
+</div>
+
+{% if event.description %}
+<div class="card" style="margin-bottom:16px;">
+  <div class="card-body" style="padding:16px;">
+    <strong>Description</strong>
+    <p style="margin-top:6px;">{{ event.description }}</p>
+  </div>
+</div>
+{% endif %}
+
+<div class="card">
+  <div class="card-header"
+       style="display:flex;justify-content:space-between;align-items:center;padding:12px 16px;">
+    <div class="h2" style="font-size:18px;">Fixtures for this Event</div>
+    <a class="btn btn-primary"
+       href="{{ url_for('add_fixture', event_id=event.id) }}">
+      + Schedule New Fixture
+    </a>
+  </div>
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Home Team</th>
+        <th>Away Team</th>
+        <th>Scheduled Date</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for f in fixtures %}
+      <tr class="table-row">
+        <td>{{ f.home_team.name if f.home_team else '-' }}</td>
+        <td>{{ f.away_team.name if f.away_team else '-' }}</td>
+        <td>
+          {% if f.scheduled_at %}
+            {{ f.scheduled_at.strftime('%Y-%m-%d %H:%M') }}
+          {% else %}
+            -
+          {% endif %}
+        </td>
+        <td>{{ f.status or '-' }}</td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="4" style="text-align:center;color:var(--muted)">
+          No fixtures scheduled for this event yet.<br>
+          Click <strong>+ Schedule New Fixture</strong> to add one.
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}
